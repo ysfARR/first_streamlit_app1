@@ -44,15 +44,21 @@ add_my_fruit = streamlit.text_input('What fruit would you like to add?')
 streamlit.write('Thanks for adding', add_my_fruit)
 my_cur.execute("insert into fruit_load_list values ('from streamlit')")
 
+
+
+#create the repetable code block ( function)
+def get_fruityvice_data(this_fruit_choice):
+      fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit_choice)
+      fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+      return fruityvice_normalized
+#newsection to display api response
 streamlit.header('Fruityvice Fruit Advice!')
 try:
   fruit_choice = streamlit.text_input('What fruit would you like information about?')
   if not fruit_choice :
       streamlit.error("Please select a fruit to get info.")
   else:  
-      fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit_choice)
-      fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-      #output
-      streamlit.dataframe(fruityvice_normalized)
+      back_from_function = get_fruityvice_data(fruit_choise)
+      streanlit.dataframe(back_from_function)      
 except URLError as e:
     streamlit.error()
